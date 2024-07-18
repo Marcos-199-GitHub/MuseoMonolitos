@@ -1,14 +1,86 @@
 <!DOCTYPE html>
 <html>
-<script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
-<!-- include ar.js for A-Frame -->
-<script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+<head>
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <!-- include ar.js for A-Frame -->
+    <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+
+</head>
 <body style='margin : 0px; overflow: hidden;'>
-<a-scene embedded arjs>
-    <!-- create your content here. just a box for now -->
-    <a-box position='0 0.5 0' material='opacity: 0.5;'></a-box>
-    <!-- define a camera which will move according to the marker position -->
-    <a-marker-camera preset='hiro'></a-marker-camera>
-</a-scene>
+
+    <header style="position: absolute; top: 0; right: 0; background-color: azure; width: 100%; display: flex;
+            justify-content: space-around; z-index: 10; height: 60px; align-items: center">
+        <button onclick="window.location.href='../'" style=" width: 100px; font-size: 20px; z-index: 10; height:80%">Regresar</button>
+
+        <h1 id="titulo">Titulo</h1>
+
+        <div style="height:80%; display: flex; justify-content: space-between; width: 150px;">
+            <button onclick="previousModel()" style="width: 50px; font-size: 20px;"><</button>
+            <button onclick="nextModel()" style="width: 50px; font-size: 20px; ">></button>
+        </div>
+
+    </header>
+
+
+    <a-scene embedded arjs>
+        <!-- define your gltf asset -->
+        <a-assets>
+            <a-asset-item id="monolito1" src="./modelo.gltf"></a-asset-item>
+            <a-asset-item id="monolito2" src="./icoesfera.gltf"></a-asset-item>
+            <a-asset-item id="monolito3" src="./modelo.gltf"></a-asset-item>
+            <a-asset-item id="monolito4" src="./icoesfera.gltf"></a-asset-item>
+            <a-asset-item id="monolito5" src="./modelo.gltf"></a-asset-item>
+        </a-assets>
+        <a-entity id = "model" position='0 0.5 0' gltf-model="#monolito2" material="color: red" light="type: point; intensity: 2.0"
+                    shadow="cast: true; receive: true" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
+                    scale="0.5 0.5 0.5"
+            ></a-entity>
+        <a-light type="directional" color="#ffffff" intensity="0.5" position="-3 0 0" rotation="0 90 0"></a-light> <!-- Luz desde la izquierda -->
+        <a-light type="directional" color="#ffffff" intensity="0.5" position="3 0 0" rotation="0 -90 0"></a-light> <!-- Luz desde la derecha -->
+        <a-light type="directional" color="#ffffff" intensity="0.5" position="0 3 0" rotation="-90 0 0"></a-light> <!-- Luz desde arriba -->
+        <a-light type="directional" color="#ffffff" intensity="0.5" position="0 -3 0" rotation="90 0 0"></a-light> <!-- Luz desde abajo -->
+        <a-light type="directional" color="#ffffff" intensity="0.5" position="0 0 -3" rotation="0 0 0"></a-light> <!-- Luz desde el frente -->
+        <a-light type="directional" color="#ffffff" intensity="0.5" position="0 0 3" rotation="0 180 0"></a-light> <!-- Luz desde atrás -->
+        <a-marker-camera preset='hiro'></a-marker-camera>
+    </a-scene>
+
+    <script>
+        const currentUrl = window.location.href;
+        //separar el # de la url
+        var id = currentUrl.split('#')[1];
+        if (id === undefined) {
+            id = 0;
+        }
+        var opciones = ['monolito1', 'monolito2', 'monolito3', 'monolito4', 'monolito5'];
+        var titulos = ['Monolito 1', 'Monolito 2', 'Monolito 3', 'Monolito 4', 'Monolito 5'];
+        var actual = parseInt(id);
+        function changeModel() {
+            var modelEl = document.querySelector('#model');
+            var currentModel = modelEl.getAttribute('gltf-model');
+            var newModel = '#' + opciones[actual];
+            modelEl.setAttribute('gltf-model', newModel);
+            //console.log(modelEl);
+
+            var titulo = document.querySelector('#titulo');
+            titulo.innerHTML = titulos[actual];
+        }
+
+        function nextModel() {
+            actual += 1;
+            if (actual >= opciones.length) {
+                actual = 0;
+            }
+            changeModel()
+        }
+        function previousModel() {
+            actual -= 1;
+            if (actual < 0) {
+                actual = opciones.length - 1;
+            }
+            changeModel()
+        }
+
+        changeModel();
+    </script>
 </body>
 </html>
