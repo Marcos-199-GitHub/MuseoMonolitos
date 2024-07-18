@@ -1,12 +1,12 @@
 AFRAME.registerComponent('button-listener', {
     init: function () {
         this.el.addEventListener('click', function () {
-            window.location.href = '/monolitos#' + this.id;
+            window.location.href = './monolitos#' + this.id;
         });
     },
     remove: function () {
         this.el.removeEventListener('click', function () {
-            window.location.href = '/monolitos#' + this.id;
+            window.location.href = './monolitos#' + this.id;
         });
     }
 });
